@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Mapping<T, R> : Advancer<R>, Traverser<R>
+    public class Mapping<T, R> : IOp<R>
     {
         private readonly Query<T> upstream;
         private readonly Func<T, R> mapper;

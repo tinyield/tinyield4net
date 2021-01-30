@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace com.tinyield
 {
@@ -8,7 +6,7 @@ namespace com.tinyield
     {
         public static readonly TraversableFinishError finishTraversal = new TraversableFinishError();
 
-        private TraversableFinishError(): base("Auxiliary exception finishes traversal!")
+        private TraversableFinishError() : base("Auxiliary exception finishes traversal!")
         {
         }
     }

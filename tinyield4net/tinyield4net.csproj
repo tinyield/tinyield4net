@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>com.tinyield</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Ops\Zip.cs~RF8d43a2a.TMP" />
+  </ItemGroup>
 
 </Project>

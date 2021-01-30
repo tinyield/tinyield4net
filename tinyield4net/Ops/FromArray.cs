@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class FromArray<U> : Advancer<U>, Traverser<U>
+    public class FromArray<U> : IOp<U>
     {
         private readonly U[] data;
         private int current;
