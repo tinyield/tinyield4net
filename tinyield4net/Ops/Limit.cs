@@ -10,6 +10,7 @@
         {
             this.upstream = upstream;
             this.n = n;
+            count = 0;
         }
 
         public void Traverse(Yield<T> yield)

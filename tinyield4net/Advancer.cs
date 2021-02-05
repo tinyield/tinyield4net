@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace com.tinyield
+﻿namespace com.tinyield
 {
+    public delegate bool TryAdvance<T>(Yield<T> yield);
+
     public interface Advancer
     {
         /// <summary>
@@ -11,7 +9,12 @@ namespace com.tinyield
         /// the given action.
         /// </summary>
         bool TryAdvance(Yield<object> yield);
-        static Advancer<R> Empty<R>() => new EmptyAdvancer<R>();
+        static Advancer<R> Empty<R>() => new AdvancerImpl<R>(yld => false);
+
+        static Advancer<R> From<R>(TryAdvance<R> tryAdvance)
+        {
+            return new AdvancerImpl<R>(tryAdvance);
+        }
     }
     public interface Advancer<T>
     {
@@ -22,11 +25,17 @@ namespace com.tinyield
         bool TryAdvance(Yield<T> yield);
     }
 
-    internal class EmptyAdvancer<R> : Advancer<R>
+    internal class AdvancerImpl<R> : Advancer<R>
     {
+        private readonly TryAdvance<R> tryAdvance;
+
+        public AdvancerImpl(TryAdvance<R> tryAdvance)
+        {
+            this.tryAdvance = tryAdvance;
+        }
         public bool TryAdvance(Yield<R> yield)
         {
-            return false;
+            return this.tryAdvance(yield);
         }
     }
 }

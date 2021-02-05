@@ -15,7 +15,8 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(item => {
+            upstream.Traverse(item =>
+            {
                 action(item);
                 yield(item);
             });
@@ -23,7 +24,8 @@ namespace com.tinyield.Ops
 
         public bool TryAdvance(Yield<T> yield)
         {
-            return upstream.TryAdvance(item => {
+            return upstream.TryAdvance(item =>
+            {
                 action(item);
                 yield(item);
             });
