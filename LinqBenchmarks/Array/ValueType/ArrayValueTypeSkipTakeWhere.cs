@@ -1,0 +1,135 @@
+﻿using BenchmarkDotNet.Attributes;
+using com.tinyield;
+using JM.LinqFaster;
+using NetFabric.Hyperlinq;
+using StructLinq;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LinqBenchmarks.Array.ValueType
+{
+    public class ArrayValueTypeSkipTakeWhere : ValueTypeArraySkipTakeBenchmarkBase
+    {
+        [Benchmark(Baseline = true)]
+        public FatValueType ForLoop()
+        {
+            var sum = default(FatValueType);
+            var end = Skip + Count;
+            for (var index = Skip; index < end; index++)
+            {
+                ref readonly var item = ref source[index];
+                if (item.IsEven())
+                    sum += item;
+            }
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType ForeachLoop()
+        {
+            using var enumerator = ((IEnumerable<FatValueType>)source).GetEnumerator();
+            for (var index = 0; index < Skip; index++)
+                _ = enumerator.MoveNext();
+            var sum = default(FatValueType);
+            for (var index = 0; index < Count; index++)
+            {
+                var item = enumerator.Current;
+                if (item.IsEven())
+                    sum += item;
+            }
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Linq()
+        {
+            var sum = default(FatValueType);
+            foreach (var item in System.Linq.Enumerable.Skip(source, Skip).Take(Count).Where(item => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType LinqFaster()
+        {
+            var items = source.SkipF(Skip).TakeF(Count).WhereF(item => item.IsEven());
+            var sum = default(FatValueType);
+            for (var index = 0; index < items.Length; index++)
+                sum += items[index];
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType LinqAF()
+        {
+            var sum = default(FatValueType);
+            foreach (var item in global::LinqAF.ArrayExtensionMethods.Skip(source, Skip).Take(Count).Where(item => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType StructLinq()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in source
+                .ToRefStructEnumerable()
+                .Skip(Skip)
+                .Take(Count)
+                .Where((in FatValueType element) => element.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType StructLinq_IFunction()
+        {
+            var sum = default(FatValueType);
+            var predicate = new FatValueTypeIsEven();
+
+            foreach (ref readonly var item in source
+                .ToRefStructEnumerable()
+                .Skip(Skip, x => x)
+                .Take(Count, x => x)
+                .Where(ref predicate, x => x))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Hyperlinq()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in ArrayExtensions
+                .Skip(source, Skip)
+                .Take(Count)
+                .Where((in FatValueType item) => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Hyperlinq_IFunction()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in ArrayExtensions
+                .Skip(source, Skip)
+                .Take(Count)
+                .WhereRef<FatValueType, FatValueTypeIsEven>())
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Tinyield()
+        {
+            var sum = default(FatValueType);
+            Query.Of(source)
+                .Skip(Skip)
+                .Limit(Count)
+                .Filter(i => i.IsEven())
+                .Traverse(item => sum += item);
+            return sum;
+        }
+    }
+}

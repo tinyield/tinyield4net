@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tinyield4net", "tinyield4net\tinyield4net.csproj", "{90ED5D28-63B4-47D5-9664-1A3F4CBF1CB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tinyield4netTest", "tinyield4netTest\tinyield4netTest.csproj", "{48BCB68D-4485-4533-B10F-8D432B552372}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tinyield4netTest", "tinyield4netTest\tinyield4netTest.csproj", "{48BCB68D-4485-4533-B10F-8D432B552372}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqBenchmarks", "LinqBenchmarks\LinqBenchmarks.csproj", "{802FFCD0-67F7-4A9A-B472-4B296A995BE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{48BCB68D-4485-4533-B10F-8D432B552372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48BCB68D-4485-4533-B10F-8D432B552372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48BCB68D-4485-4533-B10F-8D432B552372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802FFCD0-67F7-4A9A-B472-4B296A995BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802FFCD0-67F7-4A9A-B472-4B296A995BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802FFCD0-67F7-4A9A-B472-4B296A995BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802FFCD0-67F7-4A9A-B472-4B296A995BE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

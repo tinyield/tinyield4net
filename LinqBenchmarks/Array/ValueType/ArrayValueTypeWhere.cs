@@ -1,0 +1,118 @@
+﻿using BenchmarkDotNet.Attributes;
+using com.tinyield;
+using JM.LinqFaster;
+using NetFabric.Hyperlinq;
+using StructLinq;
+
+namespace LinqBenchmarks.Array.ValueType
+{
+    public class ArrayValueTypeWhere : ValueTypeArrayBenchmarkBase
+    {
+        [Benchmark(Baseline = true)]
+        public FatValueType ForLoop()
+        {
+            var sum = default(FatValueType);
+            var array = source;
+            for (var index = 0; index < array.Length; index++)
+            {
+                ref readonly var item = ref array[index];
+                if (item.IsEven())
+                    sum += item;
+            }
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType ForeachLoop()
+        {
+            var sum = default(FatValueType);
+            foreach (var item in source)
+            {
+                if (item.IsEven())
+                    sum += item;
+            }
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Linq()
+        {
+            var sum = default(FatValueType);
+            foreach (var item in System.Linq.Enumerable.Where(source, item => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType LinqFaster()
+        {
+            var items = source.WhereF(item => item.IsEven());
+            var sum = default(FatValueType);
+            for (var index = 0; index < items.Length; index++)
+                sum += items[index];
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType LinqAF()
+        {
+            var sum = default(FatValueType);
+            foreach (var item in global::LinqAF.ArrayExtensionMethods.Where(source, item => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType StructLinq()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in source
+                .ToRefStructEnumerable()
+                .Where((in FatValueType item) => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType StructLinq_IFunction()
+        {
+            var sum = default(FatValueType);
+            var predicate = new FatValueTypeIsEven();
+            foreach (ref readonly var item in source
+                .ToRefStructEnumerable()
+                .Where(ref predicate, x => x))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Hyperlinq()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in ArrayExtensions
+                .Where(source, (in FatValueType item) => item.IsEven()))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Hyperlinq_IFunction()
+        {
+            var sum = default(FatValueType);
+            foreach (ref readonly var item in ArrayExtensions
+                .WhereRef<FatValueType, FatValueTypeIsEven>(source))
+                sum += item;
+            return sum;
+        }
+
+        [Benchmark]
+        public FatValueType Tinyield()
+        {
+            var sum = default(FatValueType);
+            Query.Of(source)
+                .Filter(i => i.IsEven())
+                .Traverse(item => sum += item);
+            return sum;
+        }
+    }
+}
