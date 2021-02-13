@@ -89,7 +89,7 @@ namespace LinqBenchmarks.Enumerable.Int32
             Query.FromEnumerable(source)
                 .Filter(i => i.IsEven())
                 .Map(i => i * 2)
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

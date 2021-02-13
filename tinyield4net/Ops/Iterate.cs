@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Iterate<T> : IOp<T>
+    public class Iterate<T>
     {
         private T prev;
         private Func<T, T> function;

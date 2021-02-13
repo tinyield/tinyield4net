@@ -125,7 +125,7 @@ namespace LinqBenchmarks.List.ValueType
             var sum = default(FatValueType);
             Query.FromEnumerable(source)
                 .Distinct()
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

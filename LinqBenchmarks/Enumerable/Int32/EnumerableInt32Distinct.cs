@@ -79,7 +79,7 @@ namespace LinqBenchmarks.Enumerable.Int32
             var sum = 0;
             Query.FromEnumerable(source)
                 .Distinct()
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

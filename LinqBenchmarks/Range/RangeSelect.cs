@@ -115,7 +115,7 @@ namespace LinqBenchmarks.Range
             Query.Iterate(Start, i => i + 1)
                 .Limit(Count)
                 .Map(i => i * 2)
-                .Traverse(i => sum += i);
+                .ForEach(i => sum += i);
             return sum;
         }
     }

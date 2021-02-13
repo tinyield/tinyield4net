@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class TakeWhile<T> : IOp<T>
+    public class TakeWhile<T>
     {
         private readonly Query<T> upstream;
         private readonly Predicate<T> predicate;
@@ -17,11 +17,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.ShortCircuit(item =>
-            {
-                if (!predicate(item)) yield.Bye();
-                yield(item);
-            });
+            while (TryAdvance(yield)) { }
         }
 
         public bool TryAdvance(Yield<T> yield)
@@ -38,7 +34,7 @@ namespace com.tinyield.Ops
                     hasNext = false;
                 }
             };
-            return upstream.TryAdvance(takeWhile) && hasNext;
+            return upstream.adv(takeWhile) && hasNext;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace tinyield4netTest
         [Test]
         public void TestLimit()
         {
-            Assert.Throws<InvalidOperationException>(() => Query.Of(0).Limit(0).Traverse(i => { }));
+            Assert.Throws<InvalidOperationException>(() => Query.Of(0).Limit(0).trav(i => { }));
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace tinyield4netTest
         {
             string expected = "2468";
             string actual = Query.Of(1, 2, 3, 4)
-                .Then<int>(q => yld => q.Traverse(i => yld(i * 2)))
+                .Then<int>(q => yld => q.trav(i => yld(i * 2)))
                 .Join();
             Assert.AreEqual(expected, actual);
         }
@@ -192,8 +192,8 @@ namespace tinyield4netTest
             string expected = "2468";
             string actual = Query.Of(1, 2, 3, 4)
                 .Then<int>(
-                    q => yld => q.TryAdvance(i => yld(i * 2)),
-                    q => yld => q.Traverse(i => yld(i * 2))
+                    q => yld => q.adv(i => yld(i * 2)),
+                    q => yld => q.trav(i => yld(i * 2))
                 )
                 .Join();
             Assert.AreEqual(expected, actual);

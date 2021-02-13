@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Peek<T> : IOp<T>
+    public class Peek<T>
     {
         private Query<T> upstream;
         private Action<T> action;
@@ -15,7 +15,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(item =>
+            upstream.trav(item =>
             {
                 action(item);
                 yield(item);
@@ -24,7 +24,7 @@ namespace com.tinyield.Ops
 
         public bool TryAdvance(Yield<T> yield)
         {
-            return upstream.TryAdvance(item =>
+            return upstream.adv(item =>
             {
                 action(item);
                 yield(item);

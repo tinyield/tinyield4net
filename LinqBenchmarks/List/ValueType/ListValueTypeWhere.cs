@@ -113,7 +113,7 @@ namespace LinqBenchmarks.List.ValueType
             var sum = default(FatValueType);
             Query.FromEnumerable(source)
                 .Filter(i => i.IsEven())
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

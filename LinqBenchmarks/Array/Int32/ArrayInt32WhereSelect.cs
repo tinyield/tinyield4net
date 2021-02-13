@@ -114,7 +114,7 @@ namespace LinqBenchmarks.Array.Int32
             Query.Of(source)
                 .Filter(i => i.IsEven())
                 .Map(item => item * 2)
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

@@ -20,7 +20,7 @@ namespace com.tinyield
         public static Query<U> Of<U>(params U[] data)
         {
             FromArray<U> op = new FromArray<U>(data);
-            return new Query<U>(op, op);
+            return new Query<U>(op.TryAdvance, op.Traverse);
         }
 
         /**
@@ -30,7 +30,7 @@ namespace com.tinyield
         public static Query<U> FromEnumerable<U>(in IEnumerable<U> data)
         {
             FromEnumerable<U> op = new FromEnumerable<U>(data);
-            return new Query<U>(op, op);
+            return new Query<U>(op.TryAdvance, op.Traverse);
         }
 
         /**
@@ -43,7 +43,7 @@ namespace com.tinyield
         public static Query<U> Iterate<U>(U seed, Func<U, U> function)
         {
             Iterate<U> op = new Iterate<U>(seed, function);
-            return new Query<U>(op, op);
+            return new Query<U>(op.TryAdvance, op.Traverse);
         }
 
         /**
@@ -53,7 +53,7 @@ namespace com.tinyield
         public static Query<U> Generate<U>(Func<U> supplier)
         {
             Generate<U> op = new Generate<U>(supplier);
-            return new Query<U>(op, op);
+            return new Query<U>(op.TryAdvance, op.Traverse);
         }
     }
 
@@ -64,8 +64,8 @@ namespace com.tinyield
     */
     public class Query<T>
     {
-        private readonly Advancer<T> adv;
-        private readonly Traverser<T> trav;
+        public readonly Advancer<T> adv;
+        public readonly Traverser<T> trav;
 
         public Query(Advancer<T> adv, Traverser<T> trav)
         {
@@ -78,47 +78,10 @@ namespace com.tinyield
         * until all elements have been processed or an
         * exception is thrown.
         */
-        public void Traverse(Yield<T> yield)
-        {
-            this.trav.Traverse(yield);
-        }
-
-        /**
-        * Yields elements sequentially in the current thread,
-        * until all elements have been processed or an
-        * exception is thrown.
-        */
         public void ForEach(Yield<T> yield)
         {
-            Traverse(yield);
+            trav(yield);
         }
-
-        /**
-        * If a remaining element exists, yields that element through
-        * the given action.
-        */
-        public bool TryAdvance(Yield<T> action)
-        {
-            return this.adv.TryAdvance(action);
-        }
-
-        /**
-        * Yields elements sequentially in the current thread,
-        * until all elements have been processed or the traversal
-        * exited normally through the invocation of yield.Bye().
-        */
-        public void ShortCircuit(Yield<T> yield)
-        {
-            try
-            {
-                this.trav.Traverse(yield);
-            }
-            catch (TraversableFinishError)
-            {
-                /* Proceed */
-            }
-        }
-
         /**
         * Returns the first element of this query,
         * or throws an <see>InvalidOperationException</see> if this query is empty.
@@ -126,7 +89,7 @@ namespace com.tinyield
         public T FindFirst()
         {
             T result = default;
-            if (!TryAdvance(elem => result = elem))
+            if (!adv(elem => result = elem))
             {
                 throw new InvalidOperationException("The source sequence is empty");
             }
@@ -151,14 +114,13 @@ namespace com.tinyield
         public bool AnyMatch(Predicate<T> predicate)
         {
             bool found = false;
-            ShortCircuit(elem =>
+            while (!found && adv(elem =>
             {
                 if (predicate(elem))
                 {
                     found = true;
-                    YieldExt.Bye();
                 }
-            });
+            })) { }
             return found;
         }
 
@@ -181,16 +143,7 @@ namespace com.tinyield
         */
         public bool AllMatch(Predicate<T> predicate)
         {
-            bool succeed = true;
-            ShortCircuit(elem =>
-            {
-                if (!predicate(elem))
-                {
-                    succeed = false;
-                    YieldExt.Bye();
-                }
-            });
-            return succeed;
+            return !AnyMatch(item => !predicate(item));
         }
 
         /**
@@ -202,7 +155,7 @@ namespace com.tinyield
         {
             T max = default;
             bool found = false;
-            Traverse(elem =>
+            trav(elem =>
             {
                 if (!found)
                 {
@@ -242,7 +195,7 @@ namespace com.tinyield
             T[] src = ToArray();
             Array.Sort(src, compare);
             FromArray<T> sorted = new FromArray<T>(src);
-            return new Query<T>(sorted, sorted);
+            return new Query<T>(sorted.TryAdvance, sorted.Traverse);
         }
 
         /**
@@ -252,7 +205,7 @@ namespace com.tinyield
         public Query<R> Map<R>(Func<T, R> mapper)
         {
             Mapping<T, R> map = new Mapping<T, R>(this, mapper);
-            return new Query<R>(map, map);
+            return new Query<R>(map.TryAdvance, map.Traverse);
         }
 
         /**
@@ -261,7 +214,7 @@ namespace com.tinyield
         public IList<T> ToList()
         {
             IList<T> data = new List<T>();
-            Traverse(data.Add);
+            trav(data.Add);
             return data;
         }
 
@@ -271,7 +224,7 @@ namespace com.tinyield
         public ISet<T> ToSet()
         {
             ISet<T> data = new HashSet<T>();
-            Traverse(i => { data.Add(i); });
+            trav(i => { data.Add(i); });
             return data;
         }
 
@@ -289,7 +242,7 @@ namespace com.tinyield
         public long Count()
         {
             int c = 0;
-            Traverse(i => c++);
+            trav(i => c++);
             return c;
         }
 
@@ -300,7 +253,7 @@ namespace com.tinyield
         public Query<T> Filter(Predicate<T> predicate)
         {
             Filter<T> filter = new Filter<T>(this, predicate);
-            return new Query<T>(filter, filter);
+            return new Query<T>(filter.TryAdvance, filter.Traverse);
         }
 
         /**
@@ -310,7 +263,7 @@ namespace com.tinyield
         public Query<T> Skip(int n)
         {
             Skip<T> skip = new Skip<T>(this, n);
-            return new Query<T>(skip, skip);
+            return new Query<T>(skip.TryAdvance, skip.Traverse);
         }
 
         /**
@@ -320,7 +273,7 @@ namespace com.tinyield
         public Query<T> DropWhile(Predicate<T> predicate)
         {
             DropWhile<T> dropWhile = new DropWhile<T>(this, predicate);
-            return new Query<T>(dropWhile, dropWhile);
+            return new Query<T>(dropWhile.TryAdvance, dropWhile.Traverse);
         }
 
         /**
@@ -330,7 +283,7 @@ namespace com.tinyield
         public Query<T> Limit(int n)
         {
             Limit<T> limit = new Limit<T>(this, n);
-            return new Query<T>(limit, limit);
+            return new Query<T>(limit.TryAdvance, limit.Traverse);
         }
 
         /**
@@ -340,7 +293,7 @@ namespace com.tinyield
         public Query<T> TakeWhile(Predicate<T> predicate)
         {
             TakeWhile<T> takeWhile = new TakeWhile<T>(this, predicate);
-            return new Query<T>(takeWhile, takeWhile);
+            return new Query<T>(takeWhile.TryAdvance, takeWhile.Traverse);
         }
 
         /**
@@ -351,7 +304,7 @@ namespace com.tinyield
         public Query<T> Concat(Query<T> other)
         {
             Concat<T> contact = new Concat<T>(this, other);
-            return new Query<T>(contact, contact);
+            return new Query<T>(contact.TryAdvance, contact.Traverse);
         }
 
         /**
@@ -362,7 +315,7 @@ namespace com.tinyield
         public Query<T> Peek(Action<T> action)
         {
             Peek<T> peek = new Peek<T>(this, action);
-            return new Query<T>(peek, peek);
+            return new Query<T>(peek.TryAdvance, peek.Traverse);
         }
 
         /**
@@ -373,7 +326,7 @@ namespace com.tinyield
         public Query<R> FlatMap<R>(Func<T, Query<R>> mapper)
         {
             FlatMap<T, R> flatMap = new FlatMap<T, R>(this, mapper);
-            return new Query<R>(flatMap, flatMap);
+            return new Query<R>(flatMap.TryAdvance, flatMap.Traverse);
         }
 
         /**
@@ -383,7 +336,7 @@ namespace com.tinyield
         public Query<T> Distinct()
         {
             Distinct<T> distinct = new Distinct<T>(this);
-            return new Query<T>(distinct, distinct);
+            return new Query<T>(distinct.TryAdvance, distinct.Traverse);
         }
 
         /**
@@ -393,7 +346,7 @@ namespace com.tinyield
         public Query<R> Zip<U, R>(Query<U> other, Func<T, U, R> zipper)
         {
             Zip<T, U, R> zip = new Zip<T, U, R>(this, other, zipper);
-            return new Query<R>(zip, zip);
+            return new Query<R>(zip.TryAdvance, zip.Traverse);
         }
 
         /**
@@ -402,10 +355,10 @@ namespace com.tinyield
         * The function <c>next</c> is applied to this query to produce a new
         * <see>Traverser</see> object that is encapsulated in the resulting query.
         */
-        public Query<R> Then<R>(Func<Query<T>, Traverse<R>> next)
+        public Query<R> Then<R>(Func<Query<T>, Traverser<R>> next)
         {
-            Advancer<R> unavailable = new AdvancerImpl<R>(yld => throw new InvalidOperationException("Missing tryAdvance() implementation! Use the overloaded then() providing both Advancer and Traverser!"));
-            return new Query<R>(unavailable, Traverser.From(next(this)));
+            Advancer<R> unavailable = yld => throw new InvalidOperationException("Missing tryAdvance() implementation! Use the overloaded then() providing both Advancer and Traverser!");
+            return new Query<R>(unavailable, next(this));
         }
 
         /**
@@ -416,9 +369,9 @@ namespace com.tinyield
         * On the other hand, the <c>nextAdv</c> is applied to this query to produce a new
         * <see>Advancer</see> object that is encapsulated in the resulting query.
         */
-        public Query<R> Then<R>(Func<Query<T>, TryAdvance<R>> nextAdv, Func<Query<T>, Traverse<R>> next)
+        public Query<R> Then<R>(Func<Query<T>, Advancer<R>> nextAdv, Func<Query<T>, Traverser<R>> next)
         {
-            return new Query<R>(Advancer.From(nextAdv(this)), Traverser.From(next(this)));
+            return new Query<R>(nextAdv(this), next(this));
         }
 
         /**
@@ -429,7 +382,7 @@ namespace com.tinyield
         public R Collect<R>(Func<R> supplier, Func<R, T, R> accumulator)
         {
             R result = supplier();
-            Traverse(elem => accumulator(result, elem));
+            trav(elem => accumulator(result, elem));
             return result;
         }
 
@@ -452,7 +405,7 @@ namespace com.tinyield
         public T Reduce(Func<T, T, T> accumulator)
         {
             T identity = default;
-            if (TryAdvance(item => identity = item))
+            if (adv(item => identity = item))
             {
                 return Reduce(identity, accumulator);
             }
@@ -469,7 +422,7 @@ namespace com.tinyield
         public T Reduce(T identity, Func<T, T, T> accumulator)
         {
             T result = identity;
-            Traverse(item => result = accumulator(result, item));
+            trav(item => result = accumulator(result, item));
             return result;
         }
     }

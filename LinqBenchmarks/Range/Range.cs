@@ -89,7 +89,7 @@ namespace LinqBenchmarks.Range
             var sum = 0;
             Query.Iterate(Start, i => i + 1)
                 .Limit(Count)
-                .Traverse(i => sum += i);
+                .ForEach(i => sum += i);
             return sum;
         }
     }

@@ -103,7 +103,7 @@ namespace LinqBenchmarks.Array.Int32
             var sum = 0;
             Query.Of(source)
                 .Distinct()
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

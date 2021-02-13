@@ -168,7 +168,7 @@ namespace LinqBenchmarks.Last.FM
             artistsByCountry
                     .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2.FindFirst(), r.Item2.FindFirst()))
                     .Filter(tuple => artistNames.Add(tuple.Item2.name))
-                    .Traverse(elem => count ++);
+                    .trav(elem => count ++);
             return count;
         }
     }

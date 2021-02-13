@@ -111,7 +111,7 @@ namespace LinqBenchmarks.List.Int32
             var sum = 0;
             Query.FromEnumerable(source)
                 .Filter(i => i.IsEven())
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

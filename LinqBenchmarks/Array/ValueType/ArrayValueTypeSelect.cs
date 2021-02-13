@@ -131,7 +131,7 @@ namespace LinqBenchmarks.Array.ValueType
             var sum = default(FatValueType);
             Query.Of(source)
                 .Map(i => i * 2)
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

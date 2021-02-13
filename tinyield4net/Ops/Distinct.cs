@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Distinct<T> : IOp<T>
+    public class Distinct<T>
     {
         private readonly Query<T> upstream;
         private readonly HashSet<T> mem;
@@ -15,7 +15,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(item =>
+            upstream.trav(item =>
             {
                 if (mem.Add(item)) yield(item);
             });
@@ -24,7 +24,7 @@ namespace com.tinyield.Ops
         public bool TryAdvance(Yield<T> yield)
         {
             bool found = false;
-            while (!found && upstream.TryAdvance(item =>
+            while (!found && upstream.adv(item =>
             {
                 if (mem.Add(item))
                 {

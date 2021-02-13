@@ -152,7 +152,7 @@ namespace LinqBenchmarks.Array.ValueType
                 .Skip(Skip)
                 .Limit(Count)
                 .Map(i => i * 2)
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

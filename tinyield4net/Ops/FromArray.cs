@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class FromArray<U> : IOp<U>
+    public class FromArray<U>
     {
         private readonly U[] data;
         private int current;

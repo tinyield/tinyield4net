@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class Skip<T> : IOp<T>
+    public class Skip<T>
     {
         private readonly Query<T> upstream;
         private readonly int n;
@@ -15,7 +15,7 @@
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(e =>
+            upstream.trav(e =>
             {
                 if (index++ >= n)
                 {
@@ -27,8 +27,8 @@
         public bool TryAdvance(Yield<T> yield)
         {
             for (; index < n; index++)
-                upstream.TryAdvance(item => { });
-            return upstream.TryAdvance(yield);
+                upstream.adv(item => { });
+            return upstream.adv(yield);
         }
     }
 }

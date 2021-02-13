@@ -126,7 +126,7 @@ namespace LinqBenchmarks.List.Int32
             var sum = 0;
             Query.FromEnumerable(source)
                 .Map(i => i * 2)
-                .Traverse(item => sum += item);
+                .ForEach(item => sum += item);
             return sum;
         }
     }

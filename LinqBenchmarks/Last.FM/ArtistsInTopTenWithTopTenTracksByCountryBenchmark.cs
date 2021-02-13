@@ -26,7 +26,7 @@ namespace LinqBenchmarks.Last.FM
             tracks = new Tracks(countries);
         }
 
-        [Benchmark(Baseline = true)]
+        // [Benchmark(Baseline = true)]
         public int ForeachLoop()
         {
             var count = 0;
@@ -80,7 +80,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int Linq()
         {
             var count = 0;
@@ -116,7 +116,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int LinqAF()
         {
             var count = 0;
@@ -152,7 +152,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int Hyperlinq()
         {
             var count = 0;
@@ -204,17 +204,17 @@ namespace LinqBenchmarks.Last.FM
             artistsByCountry
                     .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2, r.Item2))
                     .Map(triplet => {
-                IList<String> topTenSongsArtistsNames = triplet.Item3
-                        .Limit(TEN)
-                        .Map(track => track.artist.name)
-                        .ToList();
+                        IList<String> topTenSongsArtistsNames = triplet.Item3
+                                .Limit(TEN)
+                                .Map(track => track.artist.name)
+                                .ToList();
 
-                IList<Artist> topTenArtists = triplet.Item2
-                        .Limit(TEN)
-                        .Filter(artist => topTenSongsArtistsNames.Contains(artist.name))
-                        .ToList();
-                return Tuple.Create(triplet.Item1, topTenArtists);
-            }).Traverse(elem => count ++);
+                        IList<Artist> topTenArtists = triplet.Item2
+                                .Limit(TEN)
+                                .Filter(artist => topTenSongsArtistsNames.Contains(artist.name))
+                                .ToList();
+                        return Tuple.Create(triplet.Item1, topTenArtists);
+                    }).trav(elem => count ++);
             return count;
         }
     }

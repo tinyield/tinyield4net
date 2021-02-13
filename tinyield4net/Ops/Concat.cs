@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class Concat<T> : IOp<T>
+    public class Concat<T>
     {
         private readonly Query<T> upstream;
         private readonly Query<T> other;
@@ -13,13 +13,13 @@
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(yield);
-            other.Traverse(yield);
+            upstream.trav(yield);
+            other.trav(yield);
         }
 
         public bool TryAdvance(Yield<T> yield)
         {
-            return upstream.TryAdvance(yield) || other.TryAdvance(yield);
+            return upstream.adv(yield) || other.adv(yield);
         }
     }
 }

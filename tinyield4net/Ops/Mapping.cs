@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Mapping<T, R> : IOp<R>
+    public class Mapping<T, R>
     {
         private readonly Query<T> upstream;
         private readonly Func<T, R> mapper;
@@ -15,12 +15,12 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<R> yield)
         {
-            upstream.Traverse(e => yield(mapper(e)));
+            upstream.trav(e => yield(mapper(e)));
         }
 
         public bool TryAdvance(Yield<R> yield)
         {
-            return upstream.TryAdvance(item => yield(mapper(item)));
+            return upstream.adv(item => yield(mapper(item)));
         }
     }
 }

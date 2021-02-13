@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Filter<T> : IOp<T>
+    public class Filter<T>
     {
         private readonly Query<T> upstream;
         private readonly Predicate<T> predicate;
@@ -15,7 +15,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(e =>
+            upstream.trav(e =>
             {
                 if (predicate(e))
                 {
@@ -30,7 +30,7 @@ namespace com.tinyield.Ops
             bool hasNext = true;
             while (!found && hasNext)
             {
-                hasNext = upstream.TryAdvance(e =>
+                hasNext = upstream.adv(e =>
                 {
                     if (predicate(e))
                     {

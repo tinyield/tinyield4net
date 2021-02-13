@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class DropWhile<T> : IOp<T>
+    public class DropWhile<T>
     {
         private readonly Query<T> upstream;
         private readonly Predicate<T> predicate;
@@ -17,7 +17,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<T> yield)
         {
-            upstream.Traverse(item =>
+            upstream.adv(item =>
             {
                 if (!dropped && !predicate(item))
                 {
@@ -34,7 +34,7 @@ namespace com.tinyield.Ops
         {
             if (dropped)
             {
-                return upstream.TryAdvance(yield);
+                return upstream.adv(yield);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace com.tinyield.Ops
 
         private bool DropNext(Yield<T> yield)
         {
-            return upstream.TryAdvance(item =>
+            return upstream.adv(item =>
             {
                 if (!predicate(item))
                 {

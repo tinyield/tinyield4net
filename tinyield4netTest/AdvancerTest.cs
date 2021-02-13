@@ -21,7 +21,7 @@ namespace tinyield4netTest
                 .Map(word => word.Length);
             int actual = default;
             int index = 0;
-            while (query.TryAdvance(i => actual = i))
+            while (query.adv(i => actual = i))
             {
                 Assert.AreEqual(expected[index], actual);
                 index++;
@@ -38,7 +38,7 @@ namespace tinyield4netTest
                 .Sorted((a, b) => a - b);
             int actual = default;
             int index = 0;
-            while (query.TryAdvance(i => actual = i))
+            while (query.adv(i => actual = i))
             {
                 Assert.AreEqual(expected[index], actual);
                 index++;
@@ -55,9 +55,9 @@ namespace tinyield4netTest
                 .Of("ola", "super", "isel", "tinyield")
                 .Map(word => word.Length)
                 .Filter(i => i > 4);
-            Assert.IsTrue(source.TryAdvance(i => actual1 = i));
-            Assert.IsTrue(source.TryAdvance(i => actual2 = i));
-            Assert.IsFalse(source.TryAdvance(i => actual2 = i));
+            Assert.IsTrue(source.adv(i => actual1 = i));
+            Assert.IsTrue(source.adv(i => actual2 = i));
+            Assert.IsFalse(source.adv(i => actual2 = i));
             Assert.AreEqual(expected1, actual1);
             Assert.AreEqual(expected2, actual2);
         }
@@ -88,7 +88,7 @@ namespace tinyield4netTest
             int[] expected = { 0, 1, 2, 3, 4 };
             int actual = default;
             int index = 0;
-            while (query.TryAdvance(i => actual = i))
+            while (query.adv(i => actual = i))
             {
                 Assert.AreEqual(expected[index], actual);
                 Assert.IsTrue(peeked.Exists(i => i == expected[index]));
@@ -109,7 +109,7 @@ namespace tinyield4netTest
             Query<int> query = Query.Of(1, 2, 3, 4)
                 .FlatMap(i => Query.Of(i))
                 .DropWhile(i => i < 4);
-            while (query.TryAdvance(i =>
+            while (query.adv(i =>
             {
                 actual = i;
                 count++;
@@ -127,31 +127,31 @@ namespace tinyield4netTest
             Query<int> query = Query.Of(1, 2, 3, 4)
                 .Zip(Query.Of(1, 2, 3, 4), (a, b) => a - b)
                 .Distinct();
-            while (query.TryAdvance(i => actual++)) ;
+            while (query.adv(i => actual++)) ;
             Assert.AreEqual(expected, actual);
-            Assert.IsFalse(query.TryAdvance(i => actual++));
+            Assert.IsFalse(query.adv(i => actual++));
         }
 
         [Test]
-        public void TestThenAdvancerTraverser()
+        public void TestThenAdvancerForEachr()
         {
             int expected = 2;
             int actual = Query.FromEnumerable(new List<int>() { 1, 2 })
                 .Concat(Query.Of(3, 4))
                 .Then<int>(
-                    q => yld => q.TryAdvance(i => yld(i * 2)),
-                    q => yld => q.Traverse(i => yld(i * 2))
+                    q => yld => q.adv(i => yld(i * 2)),
+                    q => yld => q.trav(i => yld(i * 2))
                 )
                 .FindAny();
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void TestThenTraverser()
+        public void TestThenForEachr()
         {
             Query<int> query = Query.Of(1, 2, 3, 4)
-                .Then<int>(q => yld => q.Traverse(i => yld(i * 2)));
-            Assert.Throws<InvalidOperationException>(() => query.TryAdvance(i => { }));
+                .Then<int>(q => yld => q.trav(i => yld(i * 2)));
+            Assert.Throws<InvalidOperationException>(() => query.adv(i => { }));
         }
 
     }

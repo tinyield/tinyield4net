@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class Limit<T> : IOp<T>
+    public class Limit<T>
     {
         private readonly Query<T> upstream;
         private readonly int n;
@@ -27,7 +27,7 @@
         {
             if (count >= n) return false;
             count++;
-            return upstream.TryAdvance(yield);
+            return upstream.adv(yield);
         }
     }
 }
