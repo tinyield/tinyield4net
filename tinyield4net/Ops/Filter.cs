@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Filter<T> : IOp<T>
+    public class Filter<T>
     {
         private readonly Query<T> upstream;
         private readonly Predicate<T> predicate;

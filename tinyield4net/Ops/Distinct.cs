@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Distinct<T> : IOp<T>
+    public class Distinct<T>
     {
         private readonly Query<T> upstream;
         private readonly HashSet<T> mem;
@@ -31,7 +31,7 @@ namespace com.tinyield.Ops
                     yield(item);
                     found = true;
                 }
-            })) ;
+            })) { }
             return found;
         }
     }

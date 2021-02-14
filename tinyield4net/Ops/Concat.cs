@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class Concat<T> : IOp<T>
+    public class Concat<T>
     {
         private readonly Query<T> upstream;
         private readonly Query<T> other;

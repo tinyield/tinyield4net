@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Generate<U> : IOp<U>
+    public class Generate<U>
     {
         private readonly Func<U> supplier;
 

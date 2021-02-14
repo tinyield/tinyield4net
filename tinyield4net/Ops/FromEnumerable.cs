@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class FromEnumerable<T> : IOp<T>
+    public class FromEnumerable<T>
     {
         private readonly IEnumerator<T> source;
 

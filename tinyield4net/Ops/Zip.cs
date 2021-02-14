@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Zip<T, U, R> : IOp<R>
+    public class Zip<T, U, R>
     {
         private readonly Query<T> upstream;
         private readonly Query<U> other;
@@ -17,13 +17,7 @@ namespace com.tinyield.Ops
 
         public void Traverse(Yield<R> yield)
         {
-            upstream.ShortCircuit(e1 =>
-            {
-                if (!other.TryAdvance(e2 => yield(zipper(e1, e2))))
-                {
-                    yield.Bye();
-                }
-            });
+            while (TryAdvance(yield)) { }
         }
 
         public bool TryAdvance(Yield<R> yield)

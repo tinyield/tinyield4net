@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class FlatMap<T, R> : IOp<R>
+    public class FlatMap<T, R>
     {
         private readonly Query<T> upstream;
         private readonly Func<T, Query<R>> mapper;
@@ -12,7 +12,7 @@ namespace com.tinyield.Ops
         {
             this.upstream = upstream;
             this.mapper = mapper;
-            src = new Query<R>(Advancer.Empty<R>(), Traverser.Empty<R>());
+            src = new Query<R>(yield => false, yield => { });
         }
 
         public void Traverse(Yield<R> yield)

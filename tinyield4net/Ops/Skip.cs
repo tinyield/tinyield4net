@@ -1,6 +1,6 @@
 ﻿namespace com.tinyield.Ops
 {
-    public class Skip<T> : IOp<T>
+    public class Skip<T>
     {
         private readonly Query<T> upstream;
         private readonly int n;

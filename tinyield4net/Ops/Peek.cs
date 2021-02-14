@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class Peek<T> : IOp<T>
+    public class Peek<T>
     {
         private Query<T> upstream;
         private Action<T> action;

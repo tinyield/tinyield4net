@@ -26,7 +26,7 @@ namespace LinqBenchmarks.Last.FM
             tracks = new Tracks(countries);
         }
 
-        [Benchmark(Baseline = true)]
+        // [Benchmark(Baseline = true)]
         public int ForeachLoop()
         {
             var count = 0;
@@ -80,7 +80,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int Linq()
         {
             var count = 0;
@@ -116,7 +116,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int LinqAF()
         {
             var count = 0;
@@ -152,7 +152,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        [Benchmark]
+        // [Benchmark]
         public int Hyperlinq()
         {
             var count = 0;

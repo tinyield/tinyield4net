@@ -2,7 +2,7 @@
 
 namespace com.tinyield.Ops
 {
-    public class DropWhile<T> : IOp<T>
+    public class DropWhile<T>
     {
         private readonly Query<T> upstream;
         private readonly Predicate<T> predicate;
