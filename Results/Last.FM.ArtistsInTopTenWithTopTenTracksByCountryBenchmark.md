@@ -17,11 +17,11 @@ BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.804 (2004/?/20H1)
 Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
 .NET Core SDK=5.0.102
   [Host]     : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
-  Job-GMMZIJ : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
+  Job-QKIOSF : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
 
 Runtime=.NET Core 5.0  IterationCount=8  
 
 ```
-|   Method | Count |     Mean |    Error |   StdDev |
-|--------- |------ |---------:|---------:|---------:|
-| Tinyield |   100 | 389.1 μs | 25.07 μs | 13.11 μs |
+|   Method | Count |     Mean |   Error |  StdDev |
+|--------- |------ |---------:|--------:|--------:|
+| Tinyield |   100 | 325.4 μs | 5.56 μs | 2.47 μs |

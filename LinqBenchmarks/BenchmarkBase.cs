@@ -15,7 +15,7 @@ namespace LinqBenchmarks
     //[DisassemblyDiagnoser(printSource: true, maxDepth: 1)]
     public class BenchmarkBase
     {
-        [Params(100)]
+        [Params(1000, 100000)]
         public int Count { get; set; }
     }
 }
