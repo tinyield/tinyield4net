@@ -24,7 +24,7 @@ namespace LinqBenchmarks.Every
             lstA.ForEach(v => lstB.Add(v));
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public bool ForeachLoop() {
             IEnumerator<Value> iterB = lstB.GetEnumerator();
             foreach (Value a in lstA) {
@@ -40,7 +40,14 @@ namespace LinqBenchmarks.Every
         public bool Linq()
         {
             return lstA
-                .Zip(lstB, Value.Equals)
+                .Zip(lstB, (a, b) => a.Equals(b))
+                .All(TRUE.Equals);
+        }
+
+        [Benchmark]
+        public bool LinqAF()
+        {
+            return global::LinqAF.IEnumerableExtensionMethods.Zip(lstA, lstB, (a, b) => a.Equals(b))
                 .All(TRUE.Equals);
         }
 
@@ -49,7 +56,7 @@ namespace LinqBenchmarks.Every
         {
             return ListBindings
                 .Select<Value, Value>(lstA, v => v)
-                .Zip(lstB, Value.Equals)
+                .Zip(lstB, (a, b) => a.Equals(b))
                 .All(TRUE.Equals);
         }
 
@@ -59,7 +66,7 @@ namespace LinqBenchmarks.Every
             Query<Value> b = Query.FromEnumerable(lstB);
             return Query
                 .FromEnumerable(lstA)
-                .Zip(b, Value.Equals)
+                .Zip(b, (a, b) => a.Equals(b))
                 .AllMatch(TRUE.Equals);
         }
     }

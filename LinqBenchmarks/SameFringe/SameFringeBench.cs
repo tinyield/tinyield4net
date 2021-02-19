@@ -2,6 +2,7 @@
 using com.tinyield;
 using LinqBenchmarks.Every;
 using NetFabric.Hyperlinq;
+using StructLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,14 +43,13 @@ namespace LinqBenchmarks.SameFringe
 
         bool TRUE = true;
 
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public bool ForeachLoop()
         {
-            IEnumerator<Value> a = btA.GetLeaves().GetEnumerator();
             IEnumerator<Value> b = btB.GetLeaves().GetEnumerator();
-            while (a.MoveNext()) {
+            foreach (var a in btA.GetLeaves()) {
                 if (!b.MoveNext()) return false;
-                if (a.Current.CompareTo(b.Current) != 0) return false;
+                if (a.CompareTo(b.Current) != 0) return false;
             }
             if (b.MoveNext()) return false;
             return true;
@@ -62,6 +62,14 @@ namespace LinqBenchmarks.SameFringe
             return btA
                 .GetLeaves()
                 .Zip(btB.GetLeaves(), (t1, t2) => t1.CompareTo(t2) == 0)
+                .All(f => f);
+        }
+
+
+        [Benchmark]
+        public bool LinqAF()
+        {
+            return global::LinqAF.IEnumerableExtensionMethods.Zip(btA.GetLeaves(), btB.GetLeaves(), (t1, t2) => t1.CompareTo(t2) == 0)
                 .All(f => f);
         }
 

@@ -102,19 +102,6 @@ namespace LinqBenchmarks.Weather
         }
 
         [Benchmark]
-        public int StructLinq()
-        {
-            return source.ToStructEnumerable()
-                .Where(s => s.First() != '#')
-                .Skip(1)
-                .ToEnumerable()
-                .OddLines<string>()
-                .Select(s => Int32.Parse(s.Substring(14, 2)))
-                .Collapse()
-                .Count();
-        }
-
-        [Benchmark]
         public int Hyperlinq()
         {
             return ArrayExtensions.Where(source, s => s.First() != '#')

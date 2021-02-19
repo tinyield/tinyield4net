@@ -89,18 +89,6 @@ namespace LinqBenchmarks.Weather
                 .Count();
         }
 
-        [Benchmark]
-        public int StructLinq()
-        {
-            return source.ToStructEnumerable()
-                .Where(s => s.First() != '#')
-                .Skip(1)
-                .ToEnumerable()
-                .OddLines<string>()
-                .Select(s => Int32.Parse(s.Substring(14, 2)))
-                .Distinct()
-                .Count();
-        }
 
         [Benchmark]
         public int Hyperlinq()
