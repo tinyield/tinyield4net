@@ -132,7 +132,7 @@ namespace com.tinyield
         {
             try
             {
-                return FindFirst();
+                return First();
             }
             catch (InvalidOperationException)
             {
@@ -225,7 +225,7 @@ namespace com.tinyield
         {
             T result = default;
             int countdown = index;
-            while (TryAdvance(elem => result = elem) && countdown >= 0)
+            while (countdown >= 0 && TryAdvance(elem => result = elem))
             {
                 countdown--;
             }

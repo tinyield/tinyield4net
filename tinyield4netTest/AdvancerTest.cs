@@ -29,20 +29,16 @@ namespace tinyield4netTest
         }
 
         [Test]
-        public void TestSorted()
+        public void TestSortedElementAtOrDefault()
         {
-            int[] expected = { 3, 4, 5, 8 };
-            Query<int> query = Query
+            int expected = 5;
+            int actual = Query
                 .Of("ola", "super", "isel", "tinyield")
                 .Map(word => word.Length)
-                .Sorted((a, b) => a - b);
-            int actual = default;
-            int index = 0;
-            while (query.TryAdvance(i => actual = i))
-            {
-                Assert.AreEqual(expected[index], actual);
-                index++;
-            }
+                .OrderBy((a, b) => a - b)
+                .ElementAtOrDefault(2);
+
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -75,20 +71,31 @@ namespace tinyield4netTest
         }
 
         [Test]
+        public void TestContains()
+        {
+            
+            Assert.IsTrue(Query
+                .Iterate(0, i => i + 1)
+                .Skip(5)
+                .Limit(3)
+                .Contains(7));
+        }
+
+        [Test]
         public void TestPeekTakeWhile()
         {
             List<int> peeked = new List<int>(5);
             int i = 0;
             long expectedSize = 5;
-            Query<int> query = Query
+            IEnumerable<int> enumerable = Query
                 .Generate(() => i++)
                 .Peek(elem => peeked.Add(elem))
-                .TakeWhile(elem => elem < 5);
+                .TakeWhile(elem => elem < 5)
+                .AsEnumerable();
 
             int[] expected = { 0, 1, 2, 3, 4 };
-            int actual = default;
             int index = 0;
-            while (query.TryAdvance(i => actual = i))
+            foreach(var actual in enumerable)
             {
                 Assert.AreEqual(expected[index], actual);
                 Assert.IsTrue(peeked.Exists(i => i == expected[index]));
@@ -108,7 +115,7 @@ namespace tinyield4netTest
             int actual = default;
             Query<int> query = Query.Of(1, 2, 3, 4)
                 .FlatMap(i => Query.Of(i))
-                .DropWhile(i => i < 4);
+                .SkipWhile(i => i < 4);
             while (query.TryAdvance(i =>
             {
                 actual = i;
@@ -142,7 +149,7 @@ namespace tinyield4netTest
                     q => yld => q.TryAdvance(i => yld(i * 2)),
                     q => yld => q.Traverse(i => yld(i * 2))
                 )
-                .FindAny();
+                .FirstOrDefault();
             Assert.AreEqual(expected, actual);
         }
 

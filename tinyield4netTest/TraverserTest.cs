@@ -2,6 +2,7 @@ using com.tinyield;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace tinyield4netTest
 {
@@ -17,9 +18,21 @@ namespace tinyield4netTest
         {
             int[] expected = { 3, 5, 4, 8 };
             IList<int> actual = Query
-                .Of("ola", "super", "isel", "tinyield")
+                .Of("super", "isel", "tinyield")
+                .Prepend("ola")
                 .Map(word => word.Length)
                 .ToList();
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestLast()
+        {
+            string expected = "tinyield";
+            string actual = Query
+                .Of("super", "isel", "tinyield")
+                .Prepend("ola")
+                .LastOrDefault();
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -28,7 +41,8 @@ namespace tinyield4netTest
         {
             int expected = 8;
             int actual = Query
-                .Of("ola", "super", "isel", "tinyield")
+                .Of("ola", "super", "isel")
+                .Append("tinyield")
                 .Map(word => word.Length)
                 .Sorted((a, b) => a - b)
                 .Max((a, b) => b - a);
@@ -55,6 +69,12 @@ namespace tinyield4netTest
         }
 
         [Test]
+        public void TestEmptyCount()
+        {
+            Assert.AreEqual(Query.Empty<object>().Count(), 0);
+        }
+
+        [Test]
         public void TestSkipLimit()
         {
             int[] expected = { 5, 6, 7 };
@@ -73,8 +93,9 @@ namespace tinyield4netTest
             long expected = 2;
             long actual = Query
                 .Of("ola", "super", "isel", "tinyield")
-                .Map(word => word.Length)
-                .Filter(i => i > 4)
+                .Select(word => word.Length)
+                .Where(i => i > 4)
+                .Cast<Int32>()
                 .Count();
             Assert.AreEqual(expected, actual);
         }
@@ -111,15 +132,27 @@ namespace tinyield4netTest
         }
 
         [Test]
+        public void TestConcatAnyFalse()
+        {
+            Assert.IsFalse(Query.Of(6, 8).Concat(Query.Of(8, 5)).Any(i => i > 10));
+        }
+
+        [Test]
         public void TestConcatNoneFalse()
         {
             Assert.IsFalse(Query.Of(6, 8).Concat(Query.Of(8, 5)).NoneMatch(i => i < 10));
         }
 
         [Test]
+        public void TestConcatAny()
+        {
+            Assert.IsTrue(Query.Of(6, 8).Concat(Query.Of(8, 5)).Any(i => i < 10));
+        }
+
+        [Test]
         public void TestConcatAll()
         {
-            Assert.IsTrue(Query.Of(6, 8).Concat(Query.Of(8, 5)).AllMatch(i => i < 10));
+            Assert.IsTrue(Query.Of(6, 8).Concat(Query.Of(8, 5)).All(i => i < 10));
         }
 
         [Test]
@@ -137,7 +170,7 @@ namespace tinyield4netTest
             int actual = default;
             Query.Of(1, 2, 3, 4)
                 .Skip(1)
-                .FlatMap(i => Query.Of(i))
+                .SelectMany(i => Query.Of(i))
                 .DropWhile(i => i < 4)
                 .ForEach(i =>
                 {
@@ -165,6 +198,17 @@ namespace tinyield4netTest
         {
             string expected = "1234";
             string actual = Query.Of(1, 2, 3, 4).Join();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestAggregate()
+        {
+            string expected = "1234";
+            string actual = Query.Of(1, 2, 3, 4)
+                .Select(elem => Convert.ToString(elem))
+                .Aggregate(() => new StringBuilder(), (sb, elem) => sb.Append(elem))
+                .ToString();
             Assert.AreEqual(expected, actual);
         }
 
@@ -207,6 +251,70 @@ namespace tinyield4netTest
             long actual = Query.Iterate(0, i => i + 1)
                 .TakeWhile(i => i < 3)
                 .Count();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestTake()
+        {
+            long expected = 3;
+            long actual = Query.Range(0, 1000)
+                .Take(3)
+                .Count();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestSumInt()
+        {
+            long expected = 10;
+            long actual = Query.Repeat<int>(1, 10)
+                .Sum();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestSumDouble()
+        {
+            double expected = 10;
+            double actual = Query.Repeat<double>(1, 10)
+                .Sum();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestSumFloat()
+        {
+            float expected = 10;
+            float actual = Query.Repeat<float>(1, 10)
+                .Sum();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestAverageInt()
+        {
+            double expected = 1;
+            double actual = Query.Repeat<int>(1, 10)
+                .Average();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestAverageDouble()
+        {
+            double expected = 1;
+            double actual = Query.Repeat<double>(1, 10)
+                .Average();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestAverageFloat()
+        {
+            double expected = 1;
+            double actual = Query.Repeat<float>(1, 10)
+                .Average();
             Assert.AreEqual(expected, actual);
         }
     }
