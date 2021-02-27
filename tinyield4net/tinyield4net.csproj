@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0;netcoreapp2.1;netstandard2.1;netcoreapp3.0;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>com.tinyield</RootNamespace>
+    <PackageId>com.tinyield.tinyield4net</PackageId>
+    <Company>tinyield</Company>
+    <Authors>Diogo Poeira and Fernando Miguel Gamboa de Carvalho</Authors>
+    <Description>A Minimalistic, extensible and lazy sequence implementation for dotnet</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/tinyield</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tinyield/tinyield4net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Lazy, Sequence, Linq, Collection, Pipeline</PackageTags>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
   </PropertyGroup>
 
@@ -15,6 +25,10 @@
     <Compile Remove="Conversion\**" />
     <EmbeddedResource Remove="Conversion\**" />
     <None Remove="Conversion\**" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
