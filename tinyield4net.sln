@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tinyield4net", "tinyield4ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tinyield4netTest", "tinyield4netTest\tinyield4netTest.csproj", "{48BCB68D-4485-4533-B10F-8D432B552372}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqBenchmarks", "LinqBenchmarks\LinqBenchmarks.csproj", "{802FFCD0-67F7-4A9A-B472-4B296A995BE9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
