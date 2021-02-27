@@ -4,8 +4,6 @@ using NetFabric.Hyperlinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Every
 {
@@ -15,7 +13,8 @@ namespace LinqBenchmarks.Every
         public List<String> lstB;
 
         [GlobalSetup]
-        public void GlobalSetup() {
+        public void GlobalSetup()
+        {
             lstB = new List<String>(Count);
             lstA = System.Linq.Enumerable
                 .Range(1, Count)
@@ -25,11 +24,13 @@ namespace LinqBenchmarks.Every
         }
 
         [Benchmark]
-        public bool ForeachLoop() {
+        public bool ForeachLoop()
+        {
             IEnumerator<String> iterB = lstB.GetEnumerator();
-            foreach (String a in lstA) {
+            foreach (String a in lstA)
+            {
                 if (!iterB.MoveNext()) return false;
-                if(!a.Equals(iterB.Current)) return false;
+                if (!a.Equals(iterB.Current)) return false;
             }
             return true;
         }

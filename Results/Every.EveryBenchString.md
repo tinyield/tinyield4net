@@ -17,18 +17,20 @@ BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
 Intel Core i7-7700HQ CPU 2.80GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
 .NET Core SDK=5.0.103
   [Host]     : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT  [AttachedDebugger]
-  Job-PFTDOO : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT
+  Job-LGSKAU : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT
 
 Runtime=.NET Core 5.0  IterationCount=8  
 
 ```
-|      Method |  Count |        Mean |      Error |     StdDev |
-|------------ |------- |------------:|-----------:|-----------:|
-| **ForeachLoop** |   **1000** |    **15.47 μs** |   **0.146 μs** |   **0.065 μs** |
-|        Linq |   1000 |    35.14 μs |   0.882 μs |   0.461 μs |
-|   HyperLinq |   1000 |    37.92 μs |   0.299 μs |   0.156 μs |
-|    Tinyield |   1000 |    98.33 μs |   1.980 μs |   1.036 μs |
-| **ForeachLoop** | **100000** | **1,591.47 μs** |  **13.883 μs** |   **7.261 μs** |
-|        Linq | 100000 | 3,421.85 μs |  44.981 μs |  19.972 μs |
-|   HyperLinq | 100000 | 4,033.36 μs |  64.772 μs |  33.877 μs |
-|    Tinyield | 100000 | 9,798.34 μs | 218.923 μs | 114.501 μs |
+|      Method |  Count |         Mean |      Error |    StdDev |
+|------------ |------- |-------------:|-----------:|----------:|
+| **ForeachLoop** |   **1000** |     **16.16 μs** |   **0.142 μs** |  **0.074 μs** |
+|        Linq |   1000 |     35.52 μs |   0.445 μs |  0.232 μs |
+|      LinqAF |   1000 |     53.22 μs |   0.492 μs |  0.258 μs |
+|   HyperLinq |   1000 |     40.05 μs |   0.142 μs |  0.063 μs |
+|    Tinyield |   1000 |    100.32 μs |   2.616 μs |  1.368 μs |
+| **ForeachLoop** | **100000** |  **1,662.22 μs** |  **23.654 μs** | **12.372 μs** |
+|        Linq | 100000 |  3,562.09 μs | 151.286 μs | 67.172 μs |
+|      LinqAF | 100000 |  5,178.70 μs |  71.447 μs | 37.368 μs |
+|   HyperLinq | 100000 |  3,965.50 μs |  67.653 μs | 30.038 μs |
+|    Tinyield | 100000 | 10,126.30 μs | 190.333 μs | 99.548 μs |

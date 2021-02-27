@@ -13,19 +13,25 @@
 ### Results:
 ``` ini
 
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.804 (2004/?/20H1)
-Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=5.0.102
-  [Host]     : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
-  Job-QKIOSF : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
+Intel Core i7-7700HQ CPU 2.80GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=5.0.103
+  [Host]     : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT  [AttachedDebugger]
+  Job-LGSKAU : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT
 
 Runtime=.NET Core 5.0  IterationCount=8  
 
 ```
-|      Method | Count |      Mean |     Error |   StdDev | Ratio | RatioSD |
-|------------ |------ |----------:|----------:|---------:|------:|--------:|
-| ForeachLoop |   100 |  41.08 μs |  0.957 μs | 0.425 μs |  1.00 |    0.00 |
-|        Linq |   100 |  87.87 μs |  4.418 μs | 1.962 μs |  2.14 |    0.06 |
-|      LinqAF |   100 | 116.55 μs | 18.822 μs | 9.844 μs |  2.90 |    0.17 |
-|   Hyperlinq |   100 |  86.15 μs |  1.559 μs | 0.815 μs |  2.09 |    0.04 |
-|    Tinyield |   100 | 165.05 μs |  0.768 μs | 0.402 μs |  4.02 |    0.05 |
+|      Method |  Count |      Mean |     Error |    StdDev | Ratio | RatioSD |
+|------------ |------- |----------:|----------:|----------:|------:|--------:|
+| **ForeachLoop** |   **1000** |  **57.83 μs** |  **0.311 μs** |  **0.138 μs** |  **1.00** |    **0.00** |
+|        Linq |   1000 | 118.72 μs |  1.195 μs |  0.625 μs |  2.05 |    0.02 |
+|      LinqAF |   1000 | 460.34 μs | 49.547 μs | 21.999 μs |  7.96 |    0.37 |
+|   Hyperlinq |   1000 | 113.66 μs |  1.214 μs |  0.539 μs |  1.97 |    0.01 |
+|    Tinyield |   1000 | 246.18 μs |  2.550 μs |  1.132 μs |  4.26 |    0.02 |
+|             |        |           |           |           |       |         |
+| **ForeachLoop** | **100000** |  **59.21 μs** |  **0.937 μs** |  **0.490 μs** |  **1.00** |    **0.00** |
+|        Linq | 100000 | 119.03 μs |  1.325 μs |  0.693 μs |  2.01 |    0.02 |
+|      LinqAF | 100000 | 456.44 μs | 22.884 μs | 10.161 μs |  7.70 |    0.19 |
+|   Hyperlinq | 100000 | 113.83 μs |  1.871 μs |  0.667 μs |  1.92 |    0.02 |
+|    Tinyield | 100000 | 245.50 μs |  3.361 μs |  1.758 μs |  4.15 |    0.05 |

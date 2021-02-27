@@ -1,5 +1,4 @@
-﻿    using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Diagnosers;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
 namespace LinqBenchmarks

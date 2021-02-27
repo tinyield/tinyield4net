@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Last.FM
 {
-    
+
     public class Tracks
     {
         public readonly Dictionary<String, Track[]> data;
@@ -23,7 +21,8 @@ namespace LinqBenchmarks.Last.FM
                 try
                 {
                     tracks = System.Text.Json.JsonSerializer.Deserialize<Track[]>(File.ReadAllLines(System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\..\\..\\Last.FM\\Resources\\Tracks\\" + name + ".json")).Aggregate((s1, s2) => s1 + s2));
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     // Console.Error.WriteLine("Could not load data for country: " + name);
                 }

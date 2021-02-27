@@ -5,8 +5,6 @@ using StructLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Last.FM
 {
@@ -40,25 +38,25 @@ namespace LinqBenchmarks.Last.FM
                     isNonEnglishSpeaking = isNonEnglishSpeaking && !ENGLISH.Equals(country.languages[i].iso639_1);
                 }
 
-                if(isNonEnglishSpeaking)
+                if (isNonEnglishSpeaking)
                 {
-                    if(artists.data.ContainsKey(country.name) && !artists.data[country.name].IsEmpty())
+                    if (artists.data.ContainsKey(country.name) && !artists.data[country.name].IsEmpty())
                     {
                         artistsByCountry.Add(Tuple.Create(country, artists.data[country.name]));
                     }
 
-                    if(tracks.data.ContainsKey(country.name) && !tracks.data[country.name].IsEmpty())
+                    if (tracks.data.ContainsKey(country.name) && !tracks.data[country.name].IsEmpty())
                     {
                         tracksByCountry.Add(Tuple.Create(country, tracks.data[country.name]));
                     }
                 }
             }
 
-            List<Tuple<Country,List < Artist >>> query = new List<Tuple<Country, List<Artist>>>();
-            for(int i = 0; i < artistsByCountry.Count && i < tracksByCountry.Count; i++)
+            List<Tuple<Country, List<Artist>>> query = new List<Tuple<Country, List<Artist>>>();
+            for (int i = 0; i < artistsByCountry.Count && i < tracksByCountry.Count; i++)
             {
                 List<string> topTenSongsArtistsNames = new List<string>();
-                for(int j = 0; j < TEN && j < tracksByCountry[i].Item2.Length; j++)
+                for (int j = 0; j < TEN && j < tracksByCountry[i].Item2.Length; j++)
                 {
                     topTenSongsArtistsNames.Add(tracksByCountry[i].Item2[j].artist.name);
                 }
@@ -80,7 +78,7 @@ namespace LinqBenchmarks.Last.FM
             return count;
         }
 
-        // [Benchmark]
+        [Benchmark]
         public int Linq()
         {
             var count = 0;
@@ -99,7 +97,8 @@ namespace LinqBenchmarks.Last.FM
 
             var query = artistsByCountry
                 .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2, r.Item2))
-                .Select(triplet => {
+                .Select(triplet =>
+                {
                     List<string> topTenSongsArtistsNames = System.Linq.Enumerable.Take(triplet.Item3, TEN)
                                         .Select(track => track.artist.name)
                                         .ToList();
@@ -135,7 +134,8 @@ namespace LinqBenchmarks.Last.FM
 
             var query = artistsByCountry
                 .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2, r.Item2))
-                .Select(triplet => {
+                .Select(triplet =>
+                {
                     List<string> topTenSongsArtistsNames = global::LinqAF.ListExtensionMethods.Take(triplet.Item3, TEN)
                                         .Select(track => track.artist.name)
                                         .ToList();
@@ -168,7 +168,8 @@ namespace LinqBenchmarks.Last.FM
                 .Select(country => Tuple.Create(country, tracks.data[country.name].AsValueEnumerable()));
             artistsByCountry
             .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2, r.Item2))
-            .Select(triplet => {
+            .Select(triplet =>
+            {
                 List<string> topTenSongsArtistsNames = triplet.Item3
                                     .Take(TEN)
                                     .Select(track => track.artist.name)
@@ -203,18 +204,19 @@ namespace LinqBenchmarks.Last.FM
 
             artistsByCountry
                     .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2, r.Item2))
-                    .Map(triplet => {
-                IList<String> topTenSongsArtistsNames = triplet.Item3
-                        .Limit(TEN)
-                        .Map(track => track.artist.name)
-                        .ToList();
+                    .Map(triplet =>
+                    {
+                        IList<String> topTenSongsArtistsNames = triplet.Item3
+                                .Limit(TEN)
+                                .Map(track => track.artist.name)
+                                .ToList();
 
-                IList<Artist> topTenArtists = triplet.Item2
-                        .Limit(TEN)
-                        .Filter(artist => topTenSongsArtistsNames.Contains(artist.name))
-                        .ToList();
-                return Tuple.Create(triplet.Item1, topTenArtists);
-            }).Traverse(elem => count ++);
+                        IList<Artist> topTenArtists = triplet.Item2
+                                .Limit(TEN)
+                                .Filter(artist => topTenSongsArtistsNames.Contains(artist.name))
+                                .ToList();
+                        return Tuple.Create(triplet.Item1, topTenArtists);
+                    }).Traverse(elem => count++);
             return count;
         }
     }

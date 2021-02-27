@@ -1,13 +1,10 @@
 ﻿using BenchmarkDotNet.Attributes;
-using com.tinyield;
 using LinqBenchmarks.Every;
 using NetFabric.Hyperlinq;
 using StructLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.SameFringe
 {
@@ -17,7 +14,8 @@ namespace LinqBenchmarks.SameFringe
         public BinTree<Value> btB;
 
         [GlobalSetup]
-        public void GlobalSetup() {
+        public void GlobalSetup()
+        {
             Random rnd = new Random(110456);
             List<Value> randList = System.Linq.Enumerable
                             .Range(0, Count).Select(i => rnd.Next(1000))
@@ -47,7 +45,8 @@ namespace LinqBenchmarks.SameFringe
         public bool ForeachLoop()
         {
             IEnumerator<Value> b = btB.GetLeaves().GetEnumerator();
-            foreach (var a in btA.GetLeaves()) {
+            foreach (var a in btA.GetLeaves())
+            {
                 if (!b.MoveNext()) return false;
                 if (a.CompareTo(b.Current) != 0) return false;
             }

@@ -5,8 +5,6 @@ using StructLinq;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Weather
 {
@@ -28,7 +26,7 @@ namespace LinqBenchmarks.Weather
             var max = Int32.MinValue;
             for (var index = 1; index < array.Length; index++)
             {
-                if(array[index].First() != '#')
+                if (array[index].First() != '#')
                 {
                     if (isOdd)
                     {
@@ -52,10 +50,11 @@ namespace LinqBenchmarks.Weather
             var max = Int32.MinValue;
             foreach (var item in source)
             {
-                if(first)
+                if (first)
                 {
                     first = false;
-                } else
+                }
+                else
                 {
                     if (item.First() != '#')
                     {

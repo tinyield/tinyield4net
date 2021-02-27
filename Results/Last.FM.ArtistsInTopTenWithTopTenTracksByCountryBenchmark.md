@@ -13,15 +13,25 @@
 ### Results:
 ``` ini
 
-BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.804 (2004/?/20H1)
-Intel Core i7-8565U CPU 1.80GHz (Whiskey Lake), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=5.0.102
-  [Host]     : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
-  Job-QKIOSF : .NET Core 5.0.2 (CoreCLR 5.0.220.61120, CoreFX 5.0.220.61120), X64 RyuJIT
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19042
+Intel Core i7-7700HQ CPU 2.80GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=5.0.103
+  [Host]     : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT  [AttachedDebugger]
+  Job-DXFRHK : .NET Core 5.0.3 (CoreCLR 5.0.321.7212, CoreFX 5.0.321.7212), X64 RyuJIT
 
 Runtime=.NET Core 5.0  IterationCount=8  
 
 ```
-|   Method | Count |     Mean |   Error |  StdDev |
-|--------- |------ |---------:|--------:|--------:|
-| Tinyield |   100 | 325.4 μs | 5.56 μs | 2.47 μs |
+|      Method |  Count |       Mean |     Error |    StdDev | Ratio | RatioSD |
+|------------ |------- |-----------:|----------:|----------:|------:|--------:|
+| **ForeachLoop** |   **1000** |   **215.6 μs** |   **5.54 μs** |   **2.90 μs** |  **1.00** |    **0.00** |
+|        Linq |   1000 |   354.6 μs |  10.42 μs |   5.45 μs |  1.64 |    0.02 |
+|      LinqAF |   1000 | 1,243.8 μs | 206.17 μs | 107.83 μs |  5.77 |    0.56 |
+|   Hyperlinq |   1000 |   330.1 μs |  11.70 μs |   5.19 μs |  1.54 |    0.02 |
+|    Tinyield |   1000 |   540.8 μs |  21.19 μs |  11.08 μs |  2.51 |    0.07 |
+|             |        |            |           |           |       |         |
+| **ForeachLoop** | **100000** |   **216.7 μs** |   **5.83 μs** |   **3.05 μs** |  **1.00** |    **0.00** |
+|        Linq | 100000 |   342.2 μs |  11.40 μs |   5.06 μs |  1.58 |    0.02 |
+|      LinqAF | 100000 | 1,127.8 μs | 156.47 μs |  69.47 μs |  5.19 |    0.35 |
+|   Hyperlinq | 100000 |   325.6 μs |   7.35 μs |   3.84 μs |  1.50 |    0.03 |
+|    Tinyield | 100000 |   554.3 μs |  45.69 μs |  23.90 μs |  2.56 |    0.13 |

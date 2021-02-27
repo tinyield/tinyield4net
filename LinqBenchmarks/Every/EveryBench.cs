@@ -1,11 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
 using com.tinyield;
 using NetFabric.Hyperlinq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Every
 {
@@ -15,7 +12,8 @@ namespace LinqBenchmarks.Every
         public List<Value> lstB;
 
         [GlobalSetup]
-        public void GlobalSetup() {
+        public void GlobalSetup()
+        {
             lstB = new List<Value>(Count);
             lstA = System.Linq.Enumerable
                 .Range(1, Count)
@@ -25,11 +23,13 @@ namespace LinqBenchmarks.Every
         }
 
         [Benchmark(Baseline = true)]
-        public bool ForeachLoop() {
+        public bool ForeachLoop()
+        {
             IEnumerator<Value> iterB = lstB.GetEnumerator();
-            foreach (Value a in lstA) {
+            foreach (Value a in lstA)
+            {
                 if (!iterB.MoveNext()) return false;
-                if(!a.Equals(iterB.Current)) return false;
+                if (!a.Equals(iterB.Current)) return false;
             }
             return true;
         }

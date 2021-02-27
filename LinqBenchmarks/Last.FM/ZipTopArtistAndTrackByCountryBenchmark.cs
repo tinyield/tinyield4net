@@ -5,8 +5,6 @@ using StructLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Last.FM
 {
@@ -39,14 +37,14 @@ namespace LinqBenchmarks.Last.FM
                     isNonEnglishSpeaking = isNonEnglishSpeaking && !ENGLISH.Equals(country.languages[i].iso639_1);
                 }
 
-                if(isNonEnglishSpeaking)
+                if (isNonEnglishSpeaking)
                 {
-                    if(artists.data.ContainsKey(country.name) && !artists.data[country.name].IsEmpty())
+                    if (artists.data.ContainsKey(country.name) && !artists.data[country.name].IsEmpty())
                     {
                         artistsByCountry.Add(Tuple.Create(country, artists.data[country.name]));
                     }
 
-                    if(tracks.data.ContainsKey(country.name) && !tracks.data[country.name].IsEmpty())
+                    if (tracks.data.ContainsKey(country.name) && !tracks.data[country.name].IsEmpty())
                     {
                         tracksByCountry.Add(Tuple.Create(country, tracks.data[country.name]));
                     }
@@ -54,12 +52,12 @@ namespace LinqBenchmarks.Last.FM
             }
 
             var artistsNames = new HashSet<string>();
-            List<Tuple<Country,Artist, Track>> query = new List<Tuple<Country, Artist, Track>>();
-            for(int i = 0; i < artistsByCountry.Count && i < tracksByCountry.Count; i++)
+            List<Tuple<Country, Artist, Track>> query = new List<Tuple<Country, Artist, Track>>();
+            for (int i = 0; i < artistsByCountry.Count && i < tracksByCountry.Count; i++)
             {
                 var tuple = Tuple.Create(artistsByCountry[i].Item1, artistsByCountry[i].Item2.First().Value, tracksByCountry[i].Item2.First().Value);
-                
-                if(artistsNames.Add(tuple.Item2.name))
+
+                if (artistsNames.Add(tuple.Item2.name))
                 {
                     query.Add(tuple);
                 }
@@ -168,7 +166,7 @@ namespace LinqBenchmarks.Last.FM
             artistsByCountry
                     .Zip(tracksByCountry, (l, r) => Tuple.Create(l.Item1, l.Item2.FindFirst(), r.Item2.FindFirst()))
                     .Filter(tuple => artistNames.Add(tuple.Item2.name))
-                    .Traverse(elem => count ++);
+                    .Traverse(elem => count++);
             return count;
         }
     }

@@ -3,11 +3,8 @@ using com.tinyield;
 using NetFabric.Hyperlinq;
 using StructLinq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LinqBenchmarks.Weather
 {
@@ -29,7 +26,7 @@ namespace LinqBenchmarks.Weather
             var count = 0;
             for (var index = 1; index < array.Length; index++)
             {
-                if(array[index].First() != '#')
+                if (array[index].First() != '#')
                 {
                     if (isOdd)
                     {
@@ -55,17 +52,18 @@ namespace LinqBenchmarks.Weather
             var count = 0;
             foreach (var item in source)
             {
-                if(first)
+                if (first)
                 {
                     first = false;
-                } else
+                }
+                else
                 {
                     if (item.First() != '#')
                     {
                         if (isOdd)
                         {
                             var temp = Int32.Parse(item.Substring(14, 2));
-                            if(prev == null || !prev.Equals(temp))
+                            if (prev == null || !prev.Equals(temp))
                             {
                                 prev = temp;
                                 count++;

@@ -30,9 +30,11 @@ namespace LinqBenchmarks.Weather
 
         public static Traverser<T> OddLines<T>(Query<T> src)
         {
-            return yld => {
+            return yld =>
+            {
                 bool isOdd = false;
-                src.Traverse(item => {
+                src.Traverse(item =>
+                {
                     if (isOdd) yld(item);
                     isOdd = !isOdd;
                 });
@@ -41,9 +43,11 @@ namespace LinqBenchmarks.Weather
 
         public static Traverser<T> Collapse<T>(Query<T> src)
         {
-            return yld => {
+            return yld =>
+            {
                 object prev = null;
-                src.Traverse(item => {
+                src.Traverse(item =>
+                {
                     if (prev == null || !prev.Equals(item))
                     {
                         prev = item;
