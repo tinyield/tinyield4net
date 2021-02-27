@@ -230,6 +230,33 @@ namespace tinyield4netTest
             Assert.AreEqual(expected, actual);
         }
 
+        Traverser<T> Collapse<T>(Query<T> src)  {
+            return yld => {
+                T prev = default(T);
+                src.ForEach(item => {
+                    if (prev.Equals(default(T)) || !prev.Equals(item))
+                    {
+                        prev = item;
+                        yld(item);
+                    }
+                });
+            };
+        }
+
+        [Test]
+        public void TestThenCollapse()
+        {
+            List<int> expected = new List<int>(new int[] { 7, 9, 11, 7 });
+            int[] arrange = new int[] { 7, 7, 8, 9, 9, 11, 11, 7 };
+            List<int> actual = new List<int>();
+            Query.Of(arrange)
+                .Then(n => Collapse(n))
+                .Where(n => n % 2 != 0)
+                .ForEach(value => actual.Add(value));
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [Test]
         public void TestThenAdvancerTraverser()
         {
